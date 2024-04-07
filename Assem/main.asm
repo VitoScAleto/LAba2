@@ -1,197 +1,140 @@
-    .section .data
-number:
-    .quad 76
-    .quad 24
-    .quad 614
-    .quad 14
-    .quad 1153
+section .data
+    numbers db 76, 24, 14, 111, 56
+    size equ $ - numbers
 
-format:
-    .string "Index number = %ld\n"
+section .text
+    global main
 
-    .section .text
-    .globl main
-    .type main, @function
 main:
-    xorq %rdi, %rdi               # i = 0
-.L2:
-    movq number(,%rdi,8), %rax   # a = number[i]
-    testq %rax, %rax
-    jl .L5                        # if (a < 0) goto end
-    xorq %rdx, %rdx               # sum = 0
-    movq $1, %rcx                 # mult = 1
-.L3:
-    movq %rax, %rbx               # b = a
-    movq $10, %rsi                # divisor = 10
-    cqo                           # sign extend rax to rdx:rax
-    idivq %rsi                    # b = a % 10, a = a / 10
-    addq %rbx, %rdx               # sum += b
-    imulq %rbx, %rcx              # mult *= b
-    testq %rax, %rax
-    jne .L3                       # if (a != 0) goto next iteration
-    cmpq %rdx, %rcx               # if (sum < mult)
-    jge .L4                       #   goto next iteration
-    leaq format(%rip), %rdi       # load address of format string
-    movq %rdi, %rsi               # first argument: pointer to format string
-    movq %rax, %rdx               # second argument: index value
-    xorl %eax, %eax               # clear upper bits of rax
-    call printf                   # call printf
-.L4:
-    incq %rdi                     # i++
-    jmp .L2                       # next iteration
-.L5:
-    ret                           # end of program
+    mov rbp, rsp; for correct debugging
+    mov ecx, 0
 
+loop_start:
+    cmp ecx, size
+    jge loop_end
 
+    movzx eax, byte [numbers + rcx]
+    call sumDigits
+    mov edx, eax
 
+    movzx eax, byte [numbers + rcx]
+    call productDigits
+    cmp eax, edx
+    jg add_index
 
+    jmp skip_add_index
 
-    .section .data
-number:
-    .quad 76
-    .quad 24
-    .quad 614
-    .quad 14
-    .quad 1153
+add_index:
+    mov eax, ecx
+    call print_index
 
-format:
-    .string "Index number = %ld\n"
+skip_add_index:
+    inc ecx
+    jmp loop_start
 
-.section .text
-.globl main
-.type main, @function
-main:
-    xorq %rdi, %rdi               # i = 0
+loop_end:
+    mov eax, 60
+    xor edi, edi
+    syscall
 
-    movq $10, %rsi                # divisor = 10
-    xorq %rdx, %rdx               # sum = 0
-    movq $1, %rcx                 # mult = 1
-    leaq format(%rip), %rdi       # load address of format string
+print_index:
+    push rax
 
-.L2:
-    movq number(,%rdi,8), %rax   # a = number[i]
-    testq %rax, %rax
-    je .L3                        # if (a == 0) goto next iteration
+    mov eax, 1
+    mov edi, 1
+    mov rsi, index_msg
+    mov edx, index_msg_len
+    syscall
 
-    movq %rax, %rbx               # b = a
-    xorq %rdx, %rdx               # sum = 0
-    xorq %rcx, %rcx               # mult = 1
+    pop rax
+    ret
 
-    call calculate_sum_product
+sumDigits:
+    push rbp
+    mov rbp, rsp
+    sub rsp, 4
 
-    cmpq %rdx, %rcx               # if (sum < mult)
-    jge .L4                       #   goto next iteration
+    mov rax, [rbp + 8]
+    push rax
+    call show_number
+    add rsp, 4
 
-    movq %rdi, %rsi               # first argument: pointer to format string
-    movq %rax, %rdx               # second argument: index value
-    xorl %eax, %eax               # clear upper bits of rax
-    call printf                   # call printf
+    xor rax, rax
+    mov rcx, qword [rbp + 16]
 
-.L4:
-    addq $1, %rdi                 # i += 1
-    cmpq $5, %rdi                # check if i < 5
-    jl .L2                        # next iteration
+sum_digits_loop:
+    test rcx, rcx
+    jz sum_digits_end
 
-.L3:
-    ret                           # end of program..
+    movzx rdx, byte [rax]
+    sub rdx, '0'
+    add rax, 1
 
-calculate_sum_product:
-    pushq %rbp                    # save rbp
-    movq %rsp, %rbp               # set rbp as base pointer
+    add rax, rdx
+    dec rcx
+    jmp sum_digits_loop
 
-    movq %rdi, %r8                # save rdi (format string pointer)
-    movq %rsi, %r9                # save rsi (index value)
-    movq %rdx, %r10               # save rdx (sum)
-    movq %rcx, %r11               # save rcx (mult)
+sum_digits_end:
+    leave
+    ret
 
-    movq %rax, %rbx               # b = a
-    xorq %rdx, %rdx               # sum = 0
-    xorq %rcx, %rcx               # mult = 1
+productDigits:
+    push rbp
+    mov rbp, rsp
+    sub rsp, 4
 
-    .L6:
-    cqo                           # sign extend rax to rdx:rax
-    idivq %rsi                    # b = a % 10, a = a / 10
-    addq %rbx, %rdx               # sum += b
-    imulq %rbx, %rcx              # mult *= b
+    mov rax, [rbp + 8]
+    push rax
+    call show_number
+    add rsp, 4
 
-    testq %rax, %rax
-    jnz .L6                       # if (a != 0) goto .L6
+    xor rax, rax
+    mov rcx, qword [rbp + 16]
 
-    movq %r8, %rdi                # restore rdi (format string pointer)
-    movq %r9, %rsi                # restore rsi (index value)
-    movq %r10, %rdx               # restore rdx (sum)
-    movq %r11, %rcx               # restore rcx (mult)
+product_digits_loop:
+    test rcx, rcx
+    jz product_digits_end
 
-    popq %rbp                     # restore rbp
-    ret                           # return from subroutine
+    movzx rdx, byte [rax]
+    sub rdx, '0'
+    add rax, 1
 
+    imul rax, rdx
+    dec rcx
+    jmp product_digits_loop
 
+product_digits_end:
+    leave
+    ret
 
+show_number:
+    push rbp
+    mov rbp, rsp
+    sub rsp, 4
 
-      .section .data
-number:
-    .quad 76
-    .quad 24
-    .quad 614
-    .quad 14
-    .quad 1153
+show_number_loop:
+    movzx eax, byte [rbp + 8]
+    
+    test al, al
+    jz show_number_end
+    
+    mov dl, al
+    add dl, '0'
+    
+    push rdx
+ mov rdx, rsp
+    
+ mov eax, 1
+ mov edi, 1
+ int 0x80
+    
+ inc rbp
+ jmp show_number_loop
+    
+show_number_end:
+ leave
+ ret
 
-format:
-    .string "Index number = %ld
-"
-
-.section .text
-.globl main
-.type main, @function
-main:
-    xorq %rdi, %rdi               # i = 0
-
-    movq $10, %rsi                # divisor = 10
-    xorq %rdx, %rdx               # sum = 0
-    movq $1, %rcx                 # mult = 1
-    leaq format(%rip), %rdi       # load address of format string
-
-.L2:
-    movq number(,%rdi,8), %rax   # a = number[i]
-    testq %rax, %rax
-    jl .L5                        # if (a < 0) goto end
-
-    movq %rax, %rbx               # b = a
-    cqo                           # sign extend rax to rdx:rax
-    idivq %rsi                    # b = a % 10, a = a / 10
-    addq %rbx, %rdx               # sum += b
-    imulq %rbx, %rcx              # mult *= b
-
-    movq %rax, %rbx               # b = a
-    cqo                           # sign extend rax to rdx:rax
-    idivq %rsi                    # b = a % 10, a = a / 10
-    addq %rbx, %rdx               # sum += b
-    imulq %rbx, %rcx              # mult *= b
-
-    movq %rax, %rbx               # b = a
-    cqo                           # sign extend rax to rdx:rax
-    idivq %rsi                    # b = a % 10, a = a / 10
-    addq %rbx, %rdx               # sum += b
-    imulq %rbx, %rcx              # mult *= b
-
-    movq %rax, %rbx               # b = a
-    cqo                           # sign extend rax to rdx:rax
-    idivq %rsi                    # b = a % 10, a = a / 10
-    addq %rbx, %rdx               # sum += b
-    imulq %rbx, %rcx              # mult *= b
-
-    cmpq %rdx, %rcx               # if (sum < mult)
-    jge .L4                       #   goto next iteration
-
-    movq %rdi, %rsi               # first argument: pointer to format string
-    movq %rax, %rdx               # second argument: index value
-    xorl %eax, %eax               # clear upper bits of rax
-    call printf                   # call printf
-
-.L4:
-    addq $4, %rdi                 # i += 4
-    cmpq $20, %rdi                # check if i < 20
-    jl .L2                        # next iteration
-
-.L5:
-    ret                           # end of program.
+section .data
+ index_msg db "Index number = ", 0
+ index_msg_len equ $ - index_msg
