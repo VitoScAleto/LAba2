@@ -1,8 +1,9 @@
-import java.util.*;
+import java.util.*;//Пакет утилит Java содержит структуру сбора данных, классы сбора данных, классы, 
+//связанные с датой и временем, моделью событий, интернационализацией и различные служебные классы. 
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);// считывание с консоли
         do {
             System.out.println("Input Zadanie number");
             System.out.println("1 - Zadanie1_1");
