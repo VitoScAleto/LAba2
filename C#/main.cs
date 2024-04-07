@@ -16,7 +16,7 @@ namespace ConsoleApp
                 Console.Write("Enter number: ");
                 char s = Console.ReadKey().KeyChar;
                 Console.WriteLine();
-                switch (s)
+                switch (s)// выбор номера задания
                 {
                     case '3':
                         Zadanie3_21();
@@ -62,8 +62,8 @@ namespace ConsoleApp
                 int counterNull = 1;
                 string S;
                 Console.WriteLine("Enter the string:");
-                S = Console.ReadLine();
-                for (int i = 0; i < S.Length; i++)
+                S = Console.ReadLine();// ввод пользователем строки
+                for (int i = 0; i < S.Length; i++)//цикл 
                 {
                     if (S.Substring(i, 1) == "0" && S.Substring(i + 1, 1) == "0")
                     {
@@ -83,7 +83,7 @@ namespace ConsoleApp
 
         static void Zadanie2_1()
         {
-            Dictionary<int, string> RomanNumeral = new Dictionary<int, string>
+            Dictionary<int, string> RomanNumeral = new Dictionary<int, string>//аналог map с++ на с#
             {
                 { 1, "I" },
                 { 5, "V" },
