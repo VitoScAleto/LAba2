@@ -1,40 +1,40 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
+	"bufio" // ввод и вывод
+	"fmt"   //Пакет fmt реализует форматированный ввод-вывод с помощью функций, аналогичных printf и scanf языка C.
 	"os"
-	"strings"
+	"strings" //  работа со строками
 )
 
 func Zadanie1_1() {
-	numbers := []int{76, 24, 614, 14, 1153}
+	numbers := []int{76, 24, 614, 14, 1153} // массив чисел
 	for i := 0; i < len(numbers); i++ {
 		if numbers[i] < 0 {
 			break
 		}
 		a := numbers[i]
-		sum := 0
-		mult := 1
+		sum := 0  //сумма цифр
+		mult := 1 //умножение
 		for a > 0 {
-			b := a % 10
-			sum += b
-			mult *= b
-			a = a / 10
+			b := a % 10 // находим остаток от деления на 10(123%10=3)
+			sum += b    // сумма
+			mult *= b   //произведение
+			a = a / 10  // целосиленное деление числа(понижаем разряд 123/10=12)
 		}
-		if sum < mult {
+		if sum < mult { //если сумма меньше произведения выводим индекс данного числа
 			fmt.Printf("Index number = %d\n", i)
 		}
 	}
 }
 
 func Zadanie3_21() {
-	reader := bufio.NewReader(os.Stdin)
+	reader := bufio.NewReader(os.Stdin) // считывание ввода с консоли
 	for {
 		counterNull := 1
 		fmt.Println("Enter the string:")
 		S, _ := reader.ReadString('\n')
-		S = strings.TrimSpace(S)
+		S = strings.TrimSpace(S) // удаляем пробелы в строке с помощью TrimSpace
 		for i := 0; i < len(S)-1; i++ {
 			if S[i:i+1] == "0" && S[i+1:i+2] == "0" {
 				counterNull++
