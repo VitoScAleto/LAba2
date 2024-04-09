@@ -7,7 +7,7 @@ section .text
     extern printf
 
 main:
-    mov ebp, esp; for correct debugging
+  
     mov edi, 0  ; a = 0
     mov esi, 0  ; b = 0
     mov edx, 0  ; sum = 0
@@ -15,22 +15,17 @@ main:
 
     mov ebx, 0  ; i = 0
 loop_start:
-    cmp ebx, 5  ;если счетчик больше 5 программа завершается 
+    cmp ebx, 5  ;если счетчик больше кол-во чисел программа завершается 
     jnl loop_end  
 
-    mov eax, dword [number + ebx*4]  ; load number[i] into eax
+    mov eax, dword [number + ebx*4]  ; load number[i] into eax ebx счетчик
     test eax, eax  ; check if number[i] is negative
-    js loop_end  ; if negative, exit loop
+    js inner_loop_end  ; if negative, exit loop
 
     mov edi, eax  ; a = number[i]
-inner_loop:
-    test edi, edi  ; check if a > 0
-    jle inner_loop_end  ; if not, exit inner loop
-
-    mov esi, edi  ; b = a
-    xor eax, eax  ; clear eax for sum calculation
 sum_loop:
     movzx ecx, si  ; load b into ecx
+    
     add eax, ecx  ; sum = sum + b
     imul ecx, ecx  ; mult = mult * b
     imul edx, ecx  ; multiply carry by b
@@ -48,8 +43,7 @@ sum_loop:
     add esp, 12  ; clean up the stack
 
 inner_loop_end:
-    xor edx, edx  ; clear edx for mult
-   
+    mov edx, 1  ; clear edx for mult
     inc ebx  ; i++
     jmp loop_start  ; go to the next iteration
 
