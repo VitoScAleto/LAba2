@@ -1,6 +1,6 @@
 section .data
-    numbers db 252, 17
-    len equ $-numbers
+    number dd 15, 24, 614, 14, 1153
+    format db "Index number = %d", 10, 0
 
 section .text
     global main
@@ -8,48 +8,50 @@ section .text
 
 main:
     mov ebp, esp; for correct debugging
-    mov ecx, 0          ; инициализация счетчика
-    jmp start_loop      ; переход к началу цикла
+    mov edi, 0  ; a = 0
+    mov esi, 0  ; b = 0
+    mov edx, 0  ; sum = 0
+    mov ecx, 1  ; mult = 1
 
-start_loop:
-    cmp ecx, len        ; проверка на окончание массива
-    jge end_loop        ; если счетчик больше или равен длине массива, завершаем цикл
-    mov eax, 0          ; обнуление суммы
-    mov ebx, 1          ; установка множителя в 1
-    movzx edx, byte [numbers + ecx] ; загрузка очередного числа в edx
-    test edx, edx       ; проверка числа на отрицательность
-    js end_loop         ; если число отрицательное, завершаем цикл
+    mov ebx, 0  ; i = 0
+loop_start:
+    cmp ebx, 5  ;если счетчик больше 5 программа завершается 
+    jnl loop_end  
+
+    mov eax, dword [number + ebx*4]  ; load number[i] into eax
+    test eax, eax  ; check if number[i] is negative
+    js loop_end  ; if negative, exit loop
+
+    mov edi, eax  ; a = number[i]
 inner_loop:
-    test edx, edx       ; проверка на ноль
-    jz next_number      ; если число равно нулю, переходим к следующему
-    movzx eax, dl       ; загрузка младшего байта числа в eax
-    add al, 48          ; преобразование числа в символ
-    sub al, 48          ; возврат к числовому значению
-    add al, 30h         ; конвертация в символ ASCII
-    add al, 20h         ; вывод символа на экран
-    movzx ebx, dl       ; загрузка младшего байта числа в ebx
-    imul ebx, ebx       ; умножение множителя на число
-    movzx edx, byte [numbers + ecx] ; загрузка очередного числа в edx
-    shr edx, 8          ; сдвиг числа на 8 бит вправо
-    jmp inner_loop      ; переход к следующей итерации внутреннего цикла
-next_number:
-    cmp eax, ebx        ; сравнение суммы и произведения
-    jge next_index      ; если сумма меньше произведения, переходим к следующему индексу
-    push ecx            ; сохранение счетчика
-    push eax            ; сохранение суммы
-    push ebx            ; сохранение произведения
-    push ecx            ; передача индекса в функцию printf
-    push format         ; передача форматной строки в функцию printf
-    call printf         ; вызов функции printf
-    add esp, 20         ; очистка стека
-    pop ebx             ; восстановление произведения
-    pop eax             ; восстановление суммы
-    pop ecx             ; восстановление счетчика
-next_index:
-    inc ecx             ; инкремент счетчика
-    jmp start_loop      ; переход к началу цикла
-end_loop:
-    ret
+    test edi, edi  ; check if a > 0
+    jle inner_loop_end  ; if not, exit inner loop
 
-section .data
-    format db "Index number = %d", 10, 0
+    mov esi, edi  ; b = a
+    xor eax, eax  ; clear eax for sum calculation
+sum_loop:
+    movzx ecx, si  ; load b into ecx
+    add eax, ecx  ; sum = sum + b
+    imul ecx, ecx  ; mult = mult * b
+    imul edx, ecx  ; multiply carry by b
+    mov esi, esi  ; decrement b
+    cmp esi, 0  ; check if b != 0
+    jl sum_loop  ; if b != 0, continue sum_loop
+
+    cmp eax, edx  ; compare sum and mult
+    jb inner_loop_end  ; if sum >= mult, exit inner loop
+    
+    push eax ; push sum
+    push ebx  ; save i on the stack
+    push format  ; push format string
+    call printf  ; call printf
+    add esp, 12  ; clean up the stack
+
+inner_loop_end:
+    xor edx, edx  ; clear edx for mult
+   
+    inc ebx  ; i++
+    jmp loop_start  ; go to the next iteration
+
+loop_end:
+    ret
