@@ -1,5 +1,5 @@
 section .data
-    number dd 14, 25,15, -1381, ;массив чисел 
+    number dd 14, 25,15, -1381,18391,1,2,3,29 ;массив чисел 
     format db "Index number = %d", 10, 0 
 section .text
     global main
@@ -12,7 +12,7 @@ main:
     mov ebp, 0  ; сумма
     mov ebx, 0  ; i = 0
 loop_start:
-    cmp ebx, 4 ;если счетчик больше кол-во чисел программа завершается 
+    cmp ebx, 9;если счетчик больше кол-во чисел программа завершается 
     jnl loop_end  
     mov eax, dword [number + ebx*4]  ; load number[i] into eax 
     test eax, eax  ; check if number[i] is negative
@@ -27,8 +27,8 @@ sum_loop:
     cmp eax, 0  ; сравнение числа с нулем
     ja sum_loop   ; 
 sravnenie:
-    cmp ecx, ebp; compare sum and mult
-    jl inner_loop_end  ; 
+    cmp ebp, ecx; compare sum and mult
+    jae inner_loop_end  ; 
     push edx ; push sum
     push ebx  ; save i on the stack
     push format  ; push format string
