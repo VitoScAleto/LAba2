@@ -45,7 +45,7 @@ void Zadanie1_1(void)
 	{
 		if (number[i] > 0)
 		{
-		a = number[i];
+			a = number[i];
 			while (a > 0)
 			{
 				b = a % 10;// остаток от деления 
@@ -53,60 +53,58 @@ void Zadanie1_1(void)
 				mult = mult * b;//умножение
 				a = a / 10;// целочисленное деление
 			}
-		
-		if (sum < mult) cout << "Index number = " << i << endl;//вывод индекса элемента
-		sum = 0;
-		mult = 1;
+
+			if (sum < mult) cout << "Index number = " << i << endl;//вывод индекса элемента
+			sum = 0;
+			mult = 1;
 		}
 	}
 }
 void Zadanie3_21(void)
 {
-	while(true)
-	{
 		int counterNull = 1;
-		string S;
-		getline(cin, S);// считывание строки до перехода
-		for (int i = 0; i < S.size(); i++)
+		string S = "\0";
+		while (true)
 		{
-			if (S.substr(i, 1) == "0" && S.substr(i + 1, 1) == "0")
+			getline(cin, S);// считывание строки до перехода на новою
+			for (int i = 0; i < S.size(); i++)
 			{
-				counterNull++;
-			}
-			if (S.substr(i + 1, 1) == "1" && S.substr(i, 1) == "0")// если правая единица и слево от нее ноль
-			{
-				if (S.substr(i - counterNull, 1) == "1" && S.substr(i - counterNull +1, 1) == "0")// i - counterNull обращение к левой единице
+				if (S.substr(i, 1) == "0" && S.substr(i + 1, 1) == "0")
 				{
-					cout << S.substr(i - counterNull, counterNull + 2) << endl;// вывод подстроки i  - counterNull(левой единица) counterNull + 2(кол-во нулей + две единицы)
-					counterNull = 1;
+					counterNull++;
 				}
+				if (S.substr(i + 1, 1) == "1" && S.substr(i, 1) == "0")// если правая единица и слево от нее ноль
+				{
+					if (S.substr(i - counterNull, 1) == "1" && S.substr(i - counterNull + 1, 1) == "0")// i - counterNull обращение к левой единице
+					{
+						cout << S.substr(i - counterNull, counterNull + 2) << endl;// вывод подстроки i  - counterNull(левой единица) counterNull + 2(кол-во нулей + две единицы)
+						counterNull = 1;
+					}
 
+				}
 			}
+			cout << "Input string:" << endl;
 		}
-		cout << "Enter the string:" << endl;
-		S = "\0";
-	}
+		
 }
 
 int Zadanie2_1(void)
 {
-	map <int, string> RomanNumeral = { {1,"I"},{5,"V"},{10,"X"},{50,"L"},{100,"C"},{500,"D"},{1000,"M"}, {10000,"Q"}};
+	map <int, string> RomanNumeral = { {1,"I"},{5,"V"},{10,"X"},{50,"L"},{100,"C"},{500,"D"},{1000,"M"}, {10000,"Q"} };
 	map <string, int> RomanNumeralReverse = { {"I",1},{"V",5} ,{"X",10} ,{"L",50} ,{"C",100} ,{"D",500} ,{"M",1000},{"Q",10000} };
 	string number;
-	while (true)
-	{
-		do
+	
+	
+		cout << "(I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000)\nEnter roman number:" << endl;
+		cin >> number;
+		if (isValidRomanNumeral(number, RomanNumeral, RomanNumeralReverse) == false)
 		{
-			cout << "(I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000)\nEnter roman number:" << endl;
-			cin >> number;
-			if (isValidRomanNumeral(number, RomanNumeral, RomanNumeralReverse) == false)
-			{
-				cout << "Error roman number\n" << endl;
-			}
-		} while (isValidRomanNumeral(number,RomanNumeral, RomanNumeralReverse) == false);
-		cout << "Arabian number = " << translation(number, RomanNumeralReverse) << endl;
-	}
-
+			cout << "Error roman number\n" << endl;
+		}
+		if (isValidRomanNumeral(number, RomanNumeral, RomanNumeralReverse) == true)
+		{
+			cout << "Arabian number = " << translation(number, RomanNumeralReverse) << endl;
+		}
 	return 0;
 }
 bool isValidRomanNumeral(string romanNumber, map <int, string> RomanNumeral, map <string, int> RomanNumeralReverse)
@@ -168,6 +166,6 @@ int translation(string romanNumber, map <string, int> RomanNumeralReverse)//пе
 		}
 		prevValue = value;
 	}
-	
+
 	return total;
 }
