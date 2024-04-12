@@ -1,21 +1,21 @@
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
+import java.util.HashMap;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Input Zadanie number\n1 - Zadanie1_1\n2 - Zadanie2_1\n3 - Zadanie3_21\nEnter number: ");
-        String input = scanner.nextLine();
-        switch (input) {
-            case "1":
-                zadanie1_1();
+        System.out.println("Input Zadanie number\n1 - Zadanie1_1\n2 - Zadanie2_1\n3 - Zadanie3_21\nEnter number: ");
+        String s = scanner.nextLine();
+        
+        switch (s) {
+            case "3":
+                zadanie3_21(scanner);
                 break;
             case "2":
-                zadanie2_1();
+                zadanie2_1(scanner);
                 break;
-            case "3":
-                zadanie3_21();
+            case "1":
+                zadanie1_1();
                 break;
             default:
                 System.out.println("Error");
@@ -33,15 +33,14 @@ public class Main {
                 int b = a % 10;
                 sum += b;
                 mult *= b;
-                a = a / 10;
+                a = (int) Math.floor(a / 10);
             }
             if (sum < mult) System.out.println("Index number = " + i);
         }
     }
 
-    public static void zadanie3_21() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the string: ");
+    public static void zadanie3_21(Scanner scanner) {
+        System.out.println("Enter the string: ");
         String S = scanner.nextLine();
         int counterNull = 1;
         for (int i = 0; i < S.length() - 1; i++) {
@@ -55,11 +54,11 @@ public class Main {
                 }
             }
         }
-        zadanie3_21();
+        zadanie3_21(scanner);
     }
 
-    public static void zadanie2_1() {
-        Map<Integer, String> RomanNumeral = new HashMap<>();
+    public static void zadanie2_1(Scanner scanner) {
+        HashMap<Integer, String> RomanNumeral = new HashMap<>();
         RomanNumeral.put(1, "I");
         RomanNumeral.put(5, "V");
         RomanNumeral.put(10, "X");
@@ -69,7 +68,7 @@ public class Main {
         RomanNumeral.put(1000, "M");
         RomanNumeral.put(10000, "Q");
 
-        Map<String, Integer> RomanNumeralReverse = new HashMap<>();
+        HashMap<String, Integer> RomanNumeralReverse = new HashMap<>();
         RomanNumeralReverse.put("I", 1);
         RomanNumeralReverse.put("V", 5);
         RomanNumeralReverse.put("X", 10);
@@ -79,27 +78,27 @@ public class Main {
         RomanNumeralReverse.put("M", 1000);
         RomanNumeralReverse.put("Q", 10000);
 
-        askForRomanNumber(RomanNumeral, RomanNumeralReverse);
+        askForRomanNumber(scanner, RomanNumeral, RomanNumeralReverse);
     }
 
-    public static void askForRomanNumber(Map<Integer, String> RomanNumeral, Map<String, Integer> RomanNumeralReverse) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("(I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000)\nEnter roman number: ");
+    public static void askForRomanNumber(Scanner scanner, HashMap<Integer, String> RomanNumeral, HashMap<String, Integer> RomanNumeralReverse) {
+        System.out.println("(I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000)");
+        System.out.println("Enter roman number: ");
         String number = scanner.nextLine();
         if (!isValidRomanNumeral(number, RomanNumeral, RomanNumeralReverse)) {
             System.out.println("Error roman number");
-            askForRomanNumber(RomanNumeral, RomanNumeralReverse); // Зацикливаем метод, запрашивая ввод снова в случае ошибки
+            askForRomanNumber(scanner, RomanNumeral, RomanNumeralReverse);
         } else {
             System.out.println("Arabian number = " + translation(number, RomanNumeralReverse));
         }
     }
 
-    public static boolean isValidRomanNumeral(String romanNumber, Map<Integer, String> RomanNumeral, Map<String, Integer> RomanNumeralReverse) {
+    public static boolean isValidRomanNumeral(String romanNumber, HashMap<Integer, String> RomanNumeral, HashMap<String, Integer> RomanNumeralReverse) {
         int counterForTwo = 0;
         for (int i = 0; i < romanNumber.length(); i++) {
             int isValidCounter = 0;
-            for (Map.Entry<Integer, String> entry : RomanNumeral.entrySet()) {
-                if (romanNumber.charAt(i) == entry.getValue().charAt(0)) {
+            for (Integer key : RomanNumeral.keySet()) {
+                if (romanNumber.charAt(i) == RomanNumeral.get(key).charAt(0)) {
                     isValidCounter++;
                     break;
                 }
@@ -108,8 +107,8 @@ public class Main {
         }
         for (int i = 0; i < romanNumber.length() - 1; i++) {
             if ((romanNumber.charAt(i) == RomanNumeral.get(5).charAt(0) && romanNumber.charAt(i + 1) == RomanNumeral.get(5).charAt(0)) ||
-                    (romanNumber.charAt(i) == RomanNumeral.get(50).charAt(0) && romanNumber.charAt(i + 1) == RomanNumeral.get(50).charAt(0)) ||
-                    (romanNumber.charAt(i) == RomanNumeral.get(500).charAt(0) && romanNumber.charAt(i + 1) == RomanNumeral.get(500).charAt(0))) {
+                (romanNumber.charAt(i) == RomanNumeral.get(50).charAt(0) && romanNumber.charAt(i + 1) == RomanNumeral.get(50).charAt(0)) ||
+                (romanNumber.charAt(i) == RomanNumeral.get(500).charAt(0) && romanNumber.charAt(i + 1) == RomanNumeral.get(500).charAt(0))) {
                 counterForTwo++;
             }
             if (counterForTwo > 0) return false;
@@ -123,7 +122,7 @@ public class Main {
         return true;
     }
 
-    public static int translation(String romanNumber, Map<String, Integer> RomanNumeralReverse) {
+    public static int translation(String romanNumber, HashMap<String, Integer> RomanNumeralReverse) {
         int total = 0;
         int prevValue = 0;
         for (int i = romanNumber.length() - 1; i >= 0; i--) {
