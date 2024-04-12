@@ -23,7 +23,7 @@ fn zadanie3_21() {
 }
 
 fn zadanie1_1() {
-    let numbers = vec![76, 24, 614, 14, 1153];
+    let numbers = vec![76, 24, -614, 14, 1153];
     for (i, &number) in numbers.iter().enumerate() {
         if number < 0 {
             continue;

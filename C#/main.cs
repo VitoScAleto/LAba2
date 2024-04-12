@@ -36,11 +36,12 @@ namespace ConsoleApp
 
         static void Zadanie1_1()
         {
-            List<int> number = new List<int> { 76, 24, 614, 14, 1153 };
+            List<int> number = new List<int> { 76, 24, 614, -14, 1153 };
             int a = 0, b = 0, sum = 0, mult = 1;
             for (int i = 0; i < number.Count; i++)
             {
-                if (number[i] < 0) break;
+                if (number[i] > 0)
+                {
                 a = number[i];
                 while (a > 0)
                 {
@@ -52,6 +53,7 @@ namespace ConsoleApp
                 if (sum < mult) Console.WriteLine("Index number = " + i);
                 sum = 0;
                 mult = 1;
+                }
             }
         }
 

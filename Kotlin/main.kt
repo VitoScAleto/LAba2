@@ -1,28 +1,15 @@
-import java.util.Scanner
+import java.util.*
 
 fun main() {
-    val scanner = Scanner(System.`in`)
-    do {
-        println("Input Zadanie number")
-        println("1 - Zadanie1_1")
-        println("2 - Zadanie2_1")
-        println("3 - Zadanie3_21")
-        println("Enter number: ")
-        val s = readLine()?.get(0)
-        when (s) {
-            '3' -> zadanie3_21(scanner)
-            '2' -> zadanie2_1(scanner)
-            '1' -> zadanie1_1()
-            else -> println("Error")
-        }
-    } while (true)
+   zadanie1_1()
 }
 
 fun zadanie1_1() {
-    val numbers = listOf(76, 24, 614, 14, 1153)
-    for ((i, number) in numbers.withIndex()) {
-        if (number < 0) break
-        var a = number
+    val numbers = intArrayOf(76, 24, -614, 14, 1153)
+    for (i in numbers.indices) {
+        if (numbers[i] > 0)
+        {
+        var a = numbers[i]
         var sum = 0
         var mult = 1
         while (a > 0) {
@@ -32,71 +19,76 @@ fun zadanie1_1() {
             a /= 10
         }
         if (sum < mult) println("Index number = $i")
-    }
-}
-
-fun zadanie3_21(scanner: Scanner) {
-    while (true) {
-        var counterNull = 1
-        println("Enter the string:")
-        val s = scanner.nextLine()
-        for (i in 0 until s.length - 1) {
-            if (s[i] == '0' && s[i + 1] == '0') {
-                counterNull++
-            }
-            if (i < s.length - 2 && s[i + 1] == '1' && s[i] == '0') {
-                if (i - counterNull >= 0 && s[i - counterNull] == '1' && s[i - counterNull + 1] == '0') {
-                    println(s.substring(i - counterNull, i - counterNull + counterNull + 2))
-                    counterNull = 1
-                }
-            }
         }
     }
 }
 
-fun zadanie2_1(scanner: Scanner) {
-    val romanNumeral = mapOf(
-        1 to "I",
-        5 to "V",
-        10 to "X",
-        50 to "L",
-        100 to "C",
-        500 to "D",
-        1000 to "M",
-        10000 to "Q"
-    )
-
-    val romanNumeralReverse = mapOf(
-        "I" to 1,
-        "V" to 5,
-        "X" to 10,
-        "L" to 50,
-        "C" to 100,
-        "D" to 500,
-        "M" to 1000,
-        "Q" to 10000
-    )
-
-    var number: String
-    while (true) {
-        do {
-            println("(I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000)")
-            print("Enter roman number: ")
-            number = scanner.next()
-            if (!isValidRomanNumeral(number, romanNumeral, romanNumeralReverse)) {
-                println("Error roman number")
+fun zadanie3_21() {
+    val scanner = Scanner(System.`in`)
+    print("Enter the string: ")
+    val s = scanner.nextLine()
+    var counterNull = 1
+    for (i in 0 until s.length - 1) {
+        if (s[i] == '0' && s[i + 1] == '0') {
+            counterNull++
+        }
+        if (i < s.length - 2 && s[i + 1] == '1' && s[i] == '0') {
+            if (i - counterNull >= 0 && s[i - counterNull] == '1' && s[i - counterNull + 1] == '0') {
+                println(s.substring(i - counterNull, i - counterNull + counterNull + 2))
+                counterNull = 1
             }
-        } while (!isValidRomanNumeral(number, romanNumeral, romanNumeralReverse))
-        println("Arabian number = ${translation(number, romanNumeralReverse)}")
+        }
+    }
+    zadanie3_21()
+}
+
+fun zadanie2_1() {
+    val romanNumeral: MutableMap<Int, String> = HashMap()
+    romanNumeral[1] = "I"
+    romanNumeral[5] = "V"
+    romanNumeral[10] = "X"
+    romanNumeral[50] = "L"
+    romanNumeral[100] = "C"
+    romanNumeral[500] = "D"
+    romanNumeral[1000] = "M"
+    romanNumeral[10000] = "Q"
+
+    val romanNumeralReverse: MutableMap<String, Int> = HashMap()
+    romanNumeralReverse["I"] = 1
+    romanNumeralReverse["V"] = 5
+    romanNumeralReverse["X"] = 10
+    romanNumeralReverse["L"] = 50
+    romanNumeralReverse["C"] = 100
+    romanNumeralReverse["D"] = 500
+    romanNumeralReverse["M"] = 1000
+    romanNumeralReverse["Q"] = 10000
+
+    askForRomanNumber(romanNumeral, romanNumeralReverse)
+}
+
+fun askForRomanNumber(romanNumeral: Map<Int, String>, romanNumeralReverse: Map<String, Int>) {
+    val scanner = Scanner(System.`in`)
+    print("(I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000)\nEnter roman number: ")
+    val number = scanner.nextLine()
+    if (!isValidRomanNumeral(number, romanNumeral, romanNumeralReverse)) {
+        println("Error roman number")
+        askForRomanNumber(romanNumeral, romanNumeralReverse)
+    } else {
+        println("Arabian number = " + translation(number, romanNumeralReverse))
     }
 }
 
 fun isValidRomanNumeral(romanNumber: String, romanNumeral: Map<Int, String>, romanNumeralReverse: Map<String, Int>): Boolean {
     var counterForTwo = 0
-    for (i in 0 until romanNumber.length) {
-        if (!romanNumeral.values.contains(romanNumber[i].toString())) {
-            return false
+    for (i in romanNumber.indices) {
+        var isValidCounter = 0
+        for ((_, value) in romanNumeral) {
+            if (romanNumber[i] == value[0]) {
+                isValidCounter++
+                break
+            }
         }
+        if (isValidCounter == 0) return false
     }
     for (i in 0 until romanNumber.length - 1) {
         if ((romanNumber[i] == romanNumeral[5]?.get(0) && romanNumber[i + 1] == romanNumeral[5]?.get(0)) ||

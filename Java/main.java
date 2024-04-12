@@ -1,147 +1,140 @@
-import java.util.*;//Пакет утилит Java содержит структуру сбора данных, классы сбора данных, классы, 
-//связанные с датой и временем, моделью событий, интернационализацией и различные служебные классы. 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);// считывание с консоли
-        do {
-            System.out.println("Input Zadanie number");
-            System.out.println("1 - Zadanie1_1");
-            System.out.println("2 - Zadanie2_1");
-            System.out.println("3 - Zadanie3_21");
-            System.out.print("Enter number: ");
-            char s = scanner.next().charAt(0);
-            switch (s) {
-                case '3':
-                    Zadanie3_21();
-                    break;
-                case '2':
-                    Zadanie2_1();
-                    break;
-                case '1':
-                    Zadanie1_1();
-                    break;
-                default:
-                    System.out.println("Error");
-            }
-        } while (true);
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Input Zadanie number\n1 - Zadanie1_1\n2 - Zadanie2_1\n3 - Zadanie3_21\nEnter number: ");
+        String input = scanner.nextLine();
+        switch (input) {
+            case "1":
+                zadanie1_1();
+                break;
+            case "2":
+                zadanie2_1();
+                break;
+            case "3":
+                zadanie3_21();
+                break;
+            default:
+                System.out.println("Error");
+        }
     }
 
-    public static void Zadanie1_1() {
-        List<Integer> number = Arrays.asList(76, 24, 614, 14, 1153);
-        int a, b, sum, mult;
-        for (int i = 0; i < number.size(); i++) {
-            if (number.get(i) < 0) break;
-            a = number.get(i);
-            sum = 0;
-            mult = 1;
+    public static void zadanie1_1() {
+        int[] numbers = {76, 24, 614, 14, 1153};
+        for (int i = 0; i < numbers.length; i++) {
+            if (numbers[i] < 0) break;
+            int a = numbers[i];
+            int sum = 0;
+            int mult = 1;
             while (a > 0) {
-                b = a % 10;
-                sum = sum + b;
-                mult = mult * b;
+                int b = a % 10;
+                sum += b;
+                mult *= b;
                 a = a / 10;
             }
             if (sum < mult) System.out.println("Index number = " + i);
         }
     }
 
-    public static void Zadanie3_21() {
-    Scanner scanner = new Scanner(System.in);
-    while (true) {
+    public static void zadanie3_21() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the string: ");
+        String S = scanner.nextLine();
         int counterNull = 1;
-        String S;
-        System.out.println("Enter the string:");
-        S = scanner.nextLine();
         for (int i = 0; i < S.length() - 1; i++) {
-            if (S.substring(i, i + 1).equals("0") && S.substring(i + 1, i + 2).equals("0")) {
+            if (S.charAt(i) == '0' && S.charAt(i + 1) == '0') {
                 counterNull++;
             }
-            if (i < S.length() - 2 && S.substring(i + 1, i + 2).equals("1") && S.substring(i, i + 1).equals("0")) {
-                if (i - counterNull >= 0 && S.substring(i - counterNull, i - counterNull + 1).equals("1") && S.substring(i - counterNull + 1, i - counterNull + 2).equals("0")) {
+            if (i < S.length() - 2 && S.charAt(i + 1) == '1' && S.charAt(i) == '0') {
+                if (i - counterNull >= 0 && S.charAt(i - counterNull) == '1' && S.charAt(i - counterNull + 1) == '0') {
                     System.out.println(S.substring(i - counterNull, i - counterNull + counterNull + 2));
                     counterNull = 1;
                 }
             }
         }
+        zadanie3_21();
     }
-}
 
-public static void Zadanie2_1() {
-    Map<Integer, String> RomanNumeral = new HashMap<>();
-    RomanNumeral.put(1, "I");
-    RomanNumeral.put(5, "V");
-    RomanNumeral.put(10, "X");
-    RomanNumeral.put(50, "L");
-    RomanNumeral.put(100, "C");
-    RomanNumeral.put(500, "D");
-    RomanNumeral.put(1000, "M");
-    RomanNumeral.put(10000, "Q");
+    public static void zadanie2_1() {
+        Map<Integer, String> RomanNumeral = new HashMap<>();
+        RomanNumeral.put(1, "I");
+        RomanNumeral.put(5, "V");
+        RomanNumeral.put(10, "X");
+        RomanNumeral.put(50, "L");
+        RomanNumeral.put(100, "C");
+        RomanNumeral.put(500, "D");
+        RomanNumeral.put(1000, "M");
+        RomanNumeral.put(10000, "Q");
 
-    Map<String, Integer> RomanNumeralReverse = new HashMap<>();
-    RomanNumeralReverse.put("I", 1);
-    RomanNumeralReverse.put("V", 5);
-    RomanNumeralReverse.put("X", 10);
-    RomanNumeralReverse.put("L", 50);
-    RomanNumeralReverse.put("C", 100);
-    RomanNumeralReverse.put("D", 500);
-    RomanNumeralReverse.put("M", 1000);
-    RomanNumeralReverse.put("Q", 10000);
+        Map<String, Integer> RomanNumeralReverse = new HashMap<>();
+        RomanNumeralReverse.put("I", 1);
+        RomanNumeralReverse.put("V", 5);
+        RomanNumeralReverse.put("X", 10);
+        RomanNumeralReverse.put("L", 50);
+        RomanNumeralReverse.put("C", 100);
+        RomanNumeralReverse.put("D", 500);
+        RomanNumeralReverse.put("M", 1000);
+        RomanNumeralReverse.put("Q", 10000);
 
-    Scanner scanner = new Scanner(System.in);
-    String number;
-    while (true) {
-        do {
-            System.out.println("(I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000)");
-            System.out.println("Enter roman number:");
-            number = scanner.next();
-            if (!isValidRomanNumeral(number, RomanNumeral, RomanNumeralReverse)) {
-                System.out.println("Error roman number");
-            }
-        } while (!isValidRomanNumeral(number, RomanNumeral, RomanNumeralReverse));
-        System.out.println("Arabian number = " + translation(number, RomanNumeralReverse));
+        askForRomanNumber(RomanNumeral, RomanNumeralReverse);
     }
-}
-    public static boolean isValidRomanNumeral(String romanNumber, Map<Integer, String> RomanNumeral, Map<String, Integer> RomanNumeralReverse) {
-    int counterForTwo = 0;
-    for (int i = 0; i < romanNumber.length(); i++) {
-        int isValidCounter = 0;
-        for (int j : RomanNumeral.keySet()) {
-            if (romanNumber.substring(i, i + 1).equals(RomanNumeral.get(j))) {
-                isValidCounter++;
-                break;
-            }
-        }
-        if (isValidCounter == 0) return false;
-    }
-    for (int i = 0; i < romanNumber.length() - 1; i++) {
-        if (romanNumber.substring(i, i + 1).equals(RomanNumeral.get(5)) && romanNumber.substring(i + 1, i + 2).equals(RomanNumeral.get(5)) ||
-                romanNumber.substring(i, i + 1).equals(RomanNumeral.get(50)) && romanNumber.substring(i + 1, i + 2).equals(RomanNumeral.get(50)) ||
-                romanNumber.substring(i, i + 1).equals(RomanNumeral.get(500)) && romanNumber.substring(i + 1, i + 2).equals(RomanNumeral.get(500))) {
-            counterForTwo++;
-        }
-        if (counterForTwo > 0) return false;
-        int repeatCountThreeTimes = 0;
-        for (int j = i; j < romanNumber.length(); j++) {
-            if (romanNumber.substring(i, i + 1).equals(romanNumber.substring(j, j + 1))) repeatCountThreeTimes++;
-            else break;
-        }
-        if (repeatCountThreeTimes > 3) return false;
-    }
-    return true;
-}
 
-   public static int translation(String romanNumber, Map<String, Integer> RomanNumeralReverse) {
-    int total = 0;
-    int prevValue = 0;
-    for (int i = romanNumber.length() - 1; i >= 0; i--) {
-        int value = RomanNumeralReverse.get(romanNumber.substring(i, i + 1));
-        if (value < prevValue) {
-            total -= value;
+    public static void askForRomanNumber(Map<Integer, String> RomanNumeral, Map<String, Integer> RomanNumeralReverse) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("(I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000)\nEnter roman number: ");
+        String number = scanner.nextLine();
+        if (!isValidRomanNumeral(number, RomanNumeral, RomanNumeralReverse)) {
+            System.out.println("Error roman number");
+            askForRomanNumber(RomanNumeral, RomanNumeralReverse); // Зацикливаем метод, запрашивая ввод снова в случае ошибки
         } else {
-            total += value;
+            System.out.println("Arabian number = " + translation(number, RomanNumeralReverse));
         }
-        prevValue = value;
     }
-    return total;
-}
+
+    public static boolean isValidRomanNumeral(String romanNumber, Map<Integer, String> RomanNumeral, Map<String, Integer> RomanNumeralReverse) {
+        int counterForTwo = 0;
+        for (int i = 0; i < romanNumber.length(); i++) {
+            int isValidCounter = 0;
+            for (Map.Entry<Integer, String> entry : RomanNumeral.entrySet()) {
+                if (romanNumber.charAt(i) == entry.getValue().charAt(0)) {
+                    isValidCounter++;
+                    break;
+                }
+            }
+            if (isValidCounter == 0) return false;
+        }
+        for (int i = 0; i < romanNumber.length() - 1; i++) {
+            if ((romanNumber.charAt(i) == RomanNumeral.get(5).charAt(0) && romanNumber.charAt(i + 1) == RomanNumeral.get(5).charAt(0)) ||
+                    (romanNumber.charAt(i) == RomanNumeral.get(50).charAt(0) && romanNumber.charAt(i + 1) == RomanNumeral.get(50).charAt(0)) ||
+                    (romanNumber.charAt(i) == RomanNumeral.get(500).charAt(0) && romanNumber.charAt(i + 1) == RomanNumeral.get(500).charAt(0))) {
+                counterForTwo++;
+            }
+            if (counterForTwo > 0) return false;
+            int repeatCountThreeTimes = 0;
+            for (int j = i; j < romanNumber.length(); j++) {
+                if (romanNumber.charAt(i) == romanNumber.charAt(j)) repeatCountThreeTimes++;
+                else break;
+            }
+            if (repeatCountThreeTimes > 3) return false;
+        }
+        return true;
+    }
+
+    public static int translation(String romanNumber, Map<String, Integer> RomanNumeralReverse) {
+        int total = 0;
+        int prevValue = 0;
+        for (int i = romanNumber.length() - 1; i >= 0; i--) {
+            int value = RomanNumeralReverse.get(String.valueOf(romanNumber.charAt(i)));
+            if (value < prevValue) {
+                total -= value;
+            } else {
+                total += value;
+            }
+            prevValue = value;
+        }
+        return total;
+    }
 }
