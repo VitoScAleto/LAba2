@@ -1,46 +1,61 @@
 import java.util.Scanner;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Input Zadanie number\n1 - Zadanie1_1\n2 - Zadanie2_1\n3 - Zadanie3_21\nEnter number: ");
-        String s = scanner.nextLine();
-        
+        System.out.println("Input Zadanie number");
+        System.out.println("1 - Zadanie1_1");
+        System.out.println("2 - Zadanie2_1");
+        System.out.println("3 - Zadanie3_21");
+        System.out.print("Enter number: ");
+        char s = scanner.next().charAt(0);
         switch (s) {
-            case "3":
-                zadanie3_21(scanner);
+            case '3':
+                zadanie3_21();
                 break;
-            case "2":
-                zadanie2_1(scanner);
+            case '2':
+                zadanie2_1();
                 break;
-            case "1":
+            case '1':
                 zadanie1_1();
                 break;
             default:
                 System.out.println("Error");
+                break;
+        }
+    }
+
+    public static void zadanie3_21() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the number of numbers:");
+        int size = scanner.nextInt();
+        int[] number = new int[size];
+        for (int i = 0; i < size; i++) {
+            System.out.println("Enter " + (i + 1) + " number:");
+            number[i] = scanner.nextInt();
+        }
+        int a, b, sum, mult;
+        for (int i = 0; i < size; i++) {
+            if (number[i] >= 0) {
+                a = number[i];
+                sum = 0;
+                mult = 1;
+                while (a > 0) {
+                    b = a % 10;
+                    sum = sum + b;
+                    mult = mult * b;
+                    a = a / 10;
+                }
+                if (sum < mult) System.out.println("Index number = " + i);
+            }
         }
     }
 
     public static void zadanie1_1() {
-        int[] numbers = {76, 24, 614, 14, 1153};
-        for (int i = 0; i < numbers.length; i++) {
-            if (numbers[i] < 0) break;
-            int a = numbers[i];
-            int sum = 0;
-            int mult = 1;
-            while (a > 0) {
-                int b = a % 10;
-                sum += b;
-                mult *= b;
-                a = (int) Math.floor(a / 10);
-            }
-            if (sum < mult) System.out.println("Index number = " + i);
-        }
-    }
-
-    public static void zadanie3_21(Scanner scanner) {
-        System.out.println("Enter the string: ");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the string:");
         String S = scanner.nextLine();
         int counterNull = 1;
         for (int i = 0; i < S.length() - 1; i++) {
@@ -54,11 +69,12 @@ public class Main {
                 }
             }
         }
-        zadanie3_21(scanner);
+        zadanie3_21();
     }
 
-    public static void zadanie2_1(Scanner scanner) {
-        HashMap<Integer, String> RomanNumeral = new HashMap<>();
+    public static void zadanie2_1() {
+        Scanner scanner = new Scanner(System.in);
+        Map<Integer, String> RomanNumeral = new HashMap<>();
         RomanNumeral.put(1, "I");
         RomanNumeral.put(5, "V");
         RomanNumeral.put(10, "X");
@@ -68,7 +84,7 @@ public class Main {
         RomanNumeral.put(1000, "M");
         RomanNumeral.put(10000, "Q");
 
-        HashMap<String, Integer> RomanNumeralReverse = new HashMap<>();
+        Map<String, Integer> RomanNumeralReverse = new HashMap<>();
         RomanNumeralReverse.put("I", 1);
         RomanNumeralReverse.put("V", 5);
         RomanNumeralReverse.put("X", 10);
@@ -81,9 +97,9 @@ public class Main {
         askForRomanNumber(scanner, RomanNumeral, RomanNumeralReverse);
     }
 
-    public static void askForRomanNumber(Scanner scanner, HashMap<Integer, String> RomanNumeral, HashMap<String, Integer> RomanNumeralReverse) {
+    public static void askForRomanNumber(Scanner scanner, Map<Integer, String> RomanNumeral, Map<String, Integer> RomanNumeralReverse) {
         System.out.println("(I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000)");
-        System.out.println("Enter roman number: ");
+        System.out.print("Enter roman number: ");
         String number = scanner.nextLine();
         if (!isValidRomanNumeral(number, RomanNumeral, RomanNumeralReverse)) {
             System.out.println("Error roman number");
@@ -93,12 +109,12 @@ public class Main {
         }
     }
 
-    public static boolean isValidRomanNumeral(String romanNumber, HashMap<Integer, String> RomanNumeral, HashMap<String, Integer> RomanNumeralReverse) {
+    public static boolean isValidRomanNumeral(String romanNumber, Map<Integer, String> RomanNumeral, Map<String, Integer> RomanNumeralReverse) {
         int counterForTwo = 0;
         for (int i = 0; i < romanNumber.length(); i++) {
             int isValidCounter = 0;
-            for (Integer key : RomanNumeral.keySet()) {
-                if (romanNumber.charAt(i) == RomanNumeral.get(key).charAt(0)) {
+            for (Map.Entry<Integer, String> entry : RomanNumeral.entrySet()) {
+                if (romanNumber.charAt(i) == entry.getValue().charAt(0)) {
                     isValidCounter++;
                     break;
                 }
@@ -122,11 +138,11 @@ public class Main {
         return true;
     }
 
-    public static int translation(String romanNumber, HashMap<String, Integer> RomanNumeralReverse) {
+    public static int translation(String romanNumber, Map<String, Integer> RomanNumeralReverse) {
         int total = 0;
         int prevValue = 0;
         for (int i = romanNumber.length() - 1; i >= 0; i--) {
-            int value = RomanNumeralReverse.get(String.valueOf(romanNumber.charAt(i)));
+            int value = RomanNumeralReverse.get(romanNumber.substring(i, i + 1));
             if (value < prevValue) {
                 total -= value;
             } else {
