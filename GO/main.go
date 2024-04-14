@@ -7,28 +7,37 @@ import (
 	"strings" //  работа со строками
 )
 
-func Zadanie1_1() {
-	numbers := []int{76, 24, 614, 14, 1153} // массив чисел
-	for i := 0; i < len(numbers); i++ {
-		if numbers[i] < 0 {
-			break
+func Zadanie3_21() {
+	for {
+		var size int
+		fmt.Println("Введите количество чисел для ввода:")
+		fmt.Scanf("%d", &size)
+		number := make([]int, size)
+		for i := 0; i < size; i++ {
+			var inputNumber int
+			fmt.Printf("Введите %d число:\n", i+1)
+			fmt.Scanf("%d", &inputNumber)
+			number[i] = inputNumber
 		}
-		a := numbers[i]
-		sum := 0  //сумма цифр
-		mult := 1 //умножение
-		for a > 0 {
-			b := a % 10 // находим остаток от деления на 10(123%10=3)
-			sum += b    // сумма
-			mult *= b   //произведение
-			a = a / 10  // целосиленное деление числа(понижаем разряд 123/10=12)
-		}
-		if sum < mult { //если сумма меньше произведения выводим индекс данного числа
-			fmt.Printf("Index number = %d\n", i)
+		for i := 0; i < size; i++ {
+			if number[i] >= 0 {
+				a := number[i]
+				sum, mult := 0, 1
+				for a > 0 {
+					b := a % 10
+					sum += b
+					mult *= b
+					a /= 10
+				}
+				if sum < mult {
+					fmt.Printf("Index number = %d\n", i)
+				}
+			}
 		}
 	}
 }
 
-func Zadanie3_21() {
+func Zadanie1_1() {
 	reader := bufio.NewReader(os.Stdin) // считывание ввода с консоли
 	for {
 		counterNull := 1
@@ -39,7 +48,7 @@ func Zadanie3_21() {
 			if S[i:i+1] == "0" && S[i+1:i+2] == "0" {
 				counterNull++
 			}
-			if i < len(S)-2 && S[i+1:i+2] == "1" && S[i:i+1] == "0" {
+			if i < len(S)-1 && S[i+1:i+2] == "1" && S[i:i+1] == "0" {
 				if i-counterNull >= 0 && S[i-counterNull:i-counterNull+1] == "1" && S[i-counterNull+1:i-counterNull+2] == "0" {
 					fmt.Println(S[i-counterNull : i-counterNull+counterNull+2])
 					counterNull = 1
