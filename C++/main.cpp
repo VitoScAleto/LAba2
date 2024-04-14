@@ -38,12 +38,22 @@ int main(void)
 }
 
 void Zadanie1_1(void)
-{
-	vector<int> number = { 76,24,614,14,1153 };
-	int a = 0, b = 0, sum = 0, mult = 1;
-	for (int i = 0; i < number.size(); i++)
+{	
+	int size = 0;
+	int inputNumber = 0;
+	cout << "Введите количество чисел для ввода:" << endl;
+	cin >> size;
+	vector<int> number(size);
+	for (int i = 0; i < size; i++)
 	{
-		if (number[i] > 0)
+		cout << "Введите " << i + 1 << " число:" << endl;
+		cin >> inputNumber;
+		number.emplace(number.begin()+i, inputNumber);
+	}
+	int a = 0, b = 0, sum = 0, mult = 1;
+	for (int i = 0; i < size; i++)
+	{
+		if (number[i] >= 0)
 		{
 			a = number[i];
 			while (a > 0)
