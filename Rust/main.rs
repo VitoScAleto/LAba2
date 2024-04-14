@@ -76,7 +76,7 @@ fn main() {
 }
 
 fn zadanie2_1() {
-    let mut roman_numeral = HashMap::new();
+    let mut roman_numeral: HashMap<i32, &str> = HashMap::new();
     roman_numeral.insert(1, "I");
     roman_numeral.insert(5, "V");
     roman_numeral.insert(10, "X");
@@ -86,7 +86,7 @@ fn zadanie2_1() {
     roman_numeral.insert(1000, "M");
     roman_numeral.insert(10000, "Q");
 
-    let mut roman_numeral_reverse = HashMap::new();
+    let mut roman_numeral_reverse: HashMap<&str, i32> = HashMap::new();
     roman_numeral_reverse.insert("I", 1);
     roman_numeral_reverse.insert("V", 5);
     roman_numeral_reverse.insert("X", 10);
@@ -97,55 +97,59 @@ fn zadanie2_1() {
     roman_numeral_reverse.insert("Q", 10000);
 
     loop {
-        loop {
-            println!("(I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000)");
-            print!("Enter roman number: ");
-            let mut number = String::new();
-            io::stdin().read_line(&mut number).expect("Failed to read line");
-            let number = number.trim().to_string();
-            if !is_valid_roman_numeral(&number, &roman_numeral, &roman_numeral_reverse) {
-                println!("Error roman number");
-            } else {
-                println!("Arabian number = {}", translate_roman_to_arabic(&number, &roman_numeral_reverse));
-                break;
-            }
+        println!("(I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000)");
+        print!("Enter roman number: ");
+        let mut number = String::new();
+        io::stdin().read_line(&mut number).expect("Failed to read line");
+        let number = number.trim().to_string();
+        
+        if !is_valid_roman_numeral(&number, &roman_numeral, &roman_numeral_reverse) {
+            println!("Error roman number");
+        } else {
+            println!("Arabian number = {}", translate_roman_to_arabic(&number, &roman_numeral_reverse));
         }
     }
 }
 
 fn is_valid_roman_numeral(roman_number: &String, roman_numeral: &HashMap<i32, &str>, roman_numeral_reverse: &HashMap<&str, i32>) -> bool {
     let mut counter_for_two = 0;
-    for i in 0..roman_number.len() {
-        if !roman_numeral.values().any(|&x| x == &roman_number[i..i + 1]) {
+    
+    for c in roman_number.chars() {
+        if !roman_numeral.values().any(|&x| x == c.to_string()) {
             return false;
         }
     }
-    for i in 0..roman_number.len() {
-        if &roman_number[i..i + 1] == roman_numeral[&5] && &roman_number[i + 1..i + 2] == roman_numeral[&5] ||
-            &roman_number[i..i + 1] == roman_numeral[&50] && &roman_number[i + 1..i + 2] == roman_numeral[&50] ||
-            &roman_number[i..i + 1] == roman_numeral[&500] && &roman_number[i + 1..i + 2] == roman_numeral[&500] {
+    
+    for i in 0..roman_number.len() - 1 {
+        if &roman_number[i..i+1] == roman_numeral[&5] && &roman_number[i+1..i+2] == roman_numeral[&5] ||
+            &roman_number[i..i+1] == roman_numeral[&50] && &roman_number[i+1..i+2] == roman_numeral[&50] ||
+            &roman_number[i..i+1] == roman_numeral[&500] && &roman_number[i+1..i+2] == roman_numeral[&500] {
             counter_for_two += 1;
         }
+        
         let mut repeat_count_three_times = 0;
-        for j in 0..roman_number.len() {
-            if &roman_number[i..i + 1] == &roman_number[j..j + 1] {
+        for j in i..roman_number.len() {
+            if &roman_number[i..i+1] == &roman_number[j..j+1] {
                 repeat_count_three_times += 1;
             } else {
                 break;
             }
         }
+        
         if repeat_count_three_times > 3 {
             return false;
         }
     }
+    
     true
 }
 
 fn translate_roman_to_arabic(roman_number: &String, roman_numeral_reverse: &HashMap<&str, i32>) -> i32 {
     let mut total = 0;
     let mut prev_value = 0;
+    
     for i in (0..roman_number.len()).rev() {
-        let value = *roman_numeral_reverse.get(&&roman_number[i..i + 1]).unwrap_or(&0);
+        let value = *roman_numeral_reverse.get(&&roman_number[i..i+1]).unwrap_or(&0);
         if value < prev_value {
             total -= value;
         } else {
@@ -153,22 +157,6 @@ fn translate_roman_to_arabic(roman_number: &String, roman_numeral_reverse: &Hash
         }
         prev_value = value;
     }
-    total
-}
-
-
-
-fn translation(roman_number: &String, roman_numeral_reverse: &HashMap<&str, i32>) -> i32 {
-    let mut total = 0;
-    let mut prev_value = 0;
-    for i in (0..roman_number.len()).rev() {
-        let value = roman_numeral_reverse[&roman_number[i..i+1]].clone();
-        if value < prev_value {
-            total -= value;
-        } else {
-            total += value;
-        }
-        prev_value = value;
-    }
+    
     total
 }
