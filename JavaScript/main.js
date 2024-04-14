@@ -4,24 +4,36 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-function zadanie1_1() {
-    const numbers = [76, 24, 614, 14, 1153];
-    for (let i = 0; i < numbers.length; i++) {
-        if (numbers[i] < 0) break;
-        let a = numbers[i];
-        let sum = 0;
-        let mult = 1;
-        while (a > 0) {
-            let b = a % 10;
-            sum += b;
-            mult *= b;
-            a = Math.floor(a / 10);
+function zadanie3_21() {
+   var size = 0;
+    var inputNumber = 0;
+    console.log("Введите количество чисел для ввода:");
+    size = parseInt(prompt());
+    var number = new Array(size);
+    for (var i = 0; i < size; i++) {
+        console.log("\nВведите " + (i + 1) + " число:");
+        inputNumber = parseInt(prompt());
+        number[i] = inputNumber;
+    }
+    var a = 0, b = 0, sum = 0, mult = 1;
+    for (var i = 0; i < size; i++) {
+        if (number[i] >= 0) {
+            a = number[i];
+            while (a > 0) {
+                b = a % 10; // остаток от деления 
+                sum = sum + b; // сумма
+                mult = mult * b; // умножение
+                a = Math.floor(a / 10); // целочисленное деление
+            }
+
+            if (sum < mult) console.log("\nIndex number = " + i); // вывод индекса элемента
+            sum = 0;
+            mult = 1;
         }
-        if (sum < mult) console.log("Index number = " + i);
     }
 }
 
-function zadanie3_21() {
+function zadanie1_1() {
     rl.question("Enter the string: ", (S) => {
         let counterNull = 1;
         for (let i = 0; i < S.length - 1; i++) {
