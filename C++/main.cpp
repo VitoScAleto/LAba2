@@ -3,11 +3,11 @@
 #include<map>
 #include<vector>
 using namespace std;
-void Zadanie3_21(void);
+void Zadanie1_1(void);
 bool isValidRomanNumeral(string romanNumber, map <int, string> RomanNumeral, map <string, int> RomanNumeralReverse);// roman numeral check function
 int translation(string romanNumber, map <string, int> RomanNumeralReverse);// translation from roman to arabian
 int Zadanie2_1(void);
-void Zadanie1_1(void);
+void Zadanie3_21(void);
 int main(void)
 {
 	do
@@ -37,7 +37,7 @@ int main(void)
 	return 0;
 }
 
-void Zadanie1_1(void)
+void Zadanie3_21(void)
 {	
 	int size = 0;
 	int inputNumber = 0;
@@ -70,7 +70,7 @@ void Zadanie1_1(void)
 		}
 	}
 }
-void Zadanie3_21(void)
+void Zadanie1_1(void)
 {
 		int counterNull = 1;
 		string S = "\0";
