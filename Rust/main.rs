@@ -1,44 +1,58 @@
 use std::collections::HashMap;
 use std::io::{self, BufRead};
 
-fn zadanie3_21() {
+fn zadanie1_1() {
+    let mut counter_null = 1;
     loop {
-        let mut counter_null = 0;
+        println!("Input string:");
         let mut s = String::new();
-        if let Ok(_) = io::stdin().read_line(&mut s) {
-            let s = s.trim();
-            for (i, c) in s.chars().enumerate() {
-                if c == '0' {
-                    counter_null += 1;
-                } else if c == '1' && i >= counter_null && s.chars().nth(i - counter_null).unwrap() == '0' {
-                    println!("{}", &s[i - counter_null - 1..i + 1]);
-                    counter_null = 0;
-                } else {
-                    counter_null = 0;
+        io::stdin().lock().read_line(&mut s).unwrap();
+        for i in 0..s.len() - 1 {
+            if &s[i..=i] == "0" && &s[i + 1..=i + 1] == "0" {
+                counter_null += 1;
+            }
+            if i < s.len() - 2 && &s[i + 1..=i + 1] == "1" && &s[i..=i] == "0" {
+                if i as isize - counter_null as isize >= 0 && &s[i - counter_null..=i - counter_null + 1] == "10" {
+                    println!("{}", &s[i - counter_null..=i - counter_null + counter_null + 1]);
+                    counter_null = 1;
                 }
             }
         }
-        println!("Enter the string:");
     }
 }
 
-fn zadanie1_1() {
-    let numbers = vec![76, 24, -614, 14, 1153];
-    for (i, &number) in numbers.iter().enumerate() {
-        if number < 0 {
-            continue;
-        }
-        let mut a = number;
-        let mut sum = 0;
-        let mut mult = 1;
-        while a > 0 {
-            let b = a % 10;
-            sum += b;
-            mult *= b;
-            a /= 10;
-        }
-        if sum < mult {
-            println!("Index number = {}", i);
+fn zadanie3_21() {
+    let mut size = String::new();
+    println!("Введите количество чисел для ввода:");
+    io::stdin().read_line(&mut size).expect("Failed to read line");
+    let size: usize = size.trim().parse().expect("Please enter a valid number");
+
+    let mut number = Vec::with_capacity(size);
+    for i in 0..size {
+        let mut input_number = String::new();
+        println!("Введите {} число:", i + 1);
+        io::stdin().read_line(&mut input_number).expect("Failed to read line");
+        let input_number: i32 = input_number.trim().parse().expect("Please enter a valid number");
+        number.push(input_number);
+    }
+
+    let mut sum = 0;
+    let mut mult = 1;
+    for (i, &num) in number.iter().enumerate() {
+        if num >= 0 {
+            let mut a = num;
+            while a > 0 {
+                let b = a % 10;
+                sum += b;
+                mult *= b;
+                a /= 10;
+            }
+
+            if sum < mult {
+                println!("Index number = {}", i);
+            }
+            sum = 0;
+            mult = 1;
         }
     }
 }
